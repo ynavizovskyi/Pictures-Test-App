@@ -1,4 +1,4 @@
-package com.ynavizovskyi.picturestestapp.presetntation.pages
+package com.ynavizovskyi.picturestestapp.presetntation.pages.newpictures
 
 import android.os.Bundle
 import android.view.View
@@ -8,24 +8,27 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.snackbar.Snackbar
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
-import com.ynavizovskyi.picturestestapp.presetntation.PicturesViewModel
 import com.ynavizovskyi.picturestestapp.presetntation.base.BaseFragment
+import com.ynavizovskyi.picturestestapp.presetntation.pages.PicturesAdapter
 import kotlinx.android.synthetic.main.fragment_new_pictures.*
 import javax.inject.Inject
-
 
 class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
 
 
     @Inject
-    lateinit var viewModel: PicturesViewModel
+    lateinit var viewModel: NewPicturesViewModel
 
     private val pictureItemClickListener: (Picture) -> Unit = { picture ->
 //        viewModel.markPictureAsSeen(picture, true)
-        viewModel.startOrRestartDeleteCountDown(picture)
+        viewModel.startOrRestartMarkAsSeenCountDown(picture)
     }
 
-    private val contactsAdapter = PicturesAdapter(pictureItemClickListener)
+    private val loadMoreListener: (Int) -> Unit = { nextPage ->
+        viewModel.loadPage(nextPage)
+    }
+
+    private val contactsAdapter = PicturesAdapter(pictureItemClickListener, loadMoreListener)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +47,7 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
             contactsAdapter.data = contacts
         }
 
-        viewModel.undoDeleteLiveData.observe(viewLifecycleOwner){ undo ->
+        viewModel.undoMarkAsSeenLiveData.observe(viewLifecycleOwner){ undo ->
             val mySnackbar = Snackbar.make(root, "DELETED", Snackbar.LENGTH_LONG)
             mySnackbar.setAction(R.string.undo){
                 undo.undoAction.invoke()

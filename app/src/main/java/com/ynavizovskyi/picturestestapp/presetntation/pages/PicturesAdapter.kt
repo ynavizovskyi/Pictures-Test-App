@@ -8,28 +8,48 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
 import com.ynavizovskyi.picturestestapp.presetntation.ListItem
+import com.ynavizovskyi.picturestestapp.presetntation.VIEW_TYPE_LOADING
+import com.ynavizovskyi.picturestestapp.presetntation.VIEW_TYPE_PICTURE
 import com.ynavizovskyi.picturestestapp.presetntation.loadImage
 import kotlinx.android.synthetic.main.listitem_picture.view.*
+import java.lang.IllegalArgumentException
 import kotlin.properties.Delegates
 
 class PicturesAdapter(
-    private val itemClickListener: (Picture) -> Unit
+    private val itemClickListener: (Picture) -> Unit,
+    private val loadMoreListener: (nextPage: Int) -> Unit
 ) :
-    RecyclerView.Adapter<PictureItemViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var data: List<ListItem> by Delegates.observable(emptyList()) { _, old, new ->
         DiffUtil.calculateDiff(ListItemDiffCallback(old, new)).dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureItemViewHolder {
+    override fun getItemViewType(position: Int) = data[position].viewType
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.listitem_picture, parent, false)
-        return PictureItemViewHolder(view, itemClickListener)
+        return when(viewType){
+            VIEW_TYPE_PICTURE -> {
+                val view = layoutInflater.inflate(R.layout.listitem_picture, parent, false)
+                return PictureItemViewHolder(view, itemClickListener)
+            }
+            VIEW_TYPE_LOADING -> {
+                val view = layoutInflater.inflate(R.layout.listitem_loading, parent, false)
+                return LoadingViewHolder(view, loadMoreListener)
+            }
+            else -> {
+                throw IllegalArgumentException("VIew type $viewType not supported")
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: PictureItemViewHolder, position: Int) {
-        val contact = data[position]
-        holder.bind(contact)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = data[position]
+        when(item){
+            is ListItem.PictureItem -> (holder as? PictureItemViewHolder)?.bind(item)
+            is ListItem.Loading -> (holder as? LoadingViewHolder)?.bind(item)
+        }
     }
 
     override fun getItemCount() = data.size
@@ -41,14 +61,24 @@ class PictureItemViewHolder(
 ) :
     RecyclerView.ViewHolder(itemView) {
 
-    fun bind(item: ListItem) {
-        (item as ListItem.PictureItem).let{
+    fun bind(item: ListItem.PictureItem) {
             itemView.idTextView.text = item.picture.id.toString()
             itemView.authorTextView.text = item.picture.author
             itemView.pictureImageView.loadImage(item.picture.url)
             itemView.setOnClickListener { itemClickListener.invoke(item.picture) }
-            itemView.countDownTextView.text = item.countDownValue?.value?.toString() ?: ""
-        }
+            itemView.countDownTextView.text = item.countDownValue?.toString() ?: ""
+    }
+
+}
+
+class LoadingViewHolder(
+    itemView: View,
+    private val loadMoreListener: (nextPage: Int) -> Unit
+) :
+    RecyclerView.ViewHolder(itemView) {
+
+    fun bind(item: ListItem.Loading) {
+        loadMoreListener.invoke(item.nextPage)
     }
 
 }
