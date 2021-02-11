@@ -16,7 +16,7 @@ class RemotePictureDataStore @Inject constructor(private val service: PicturesSe
     }
 
     override suspend fun loadPage(page: Int): List<PictureData> {
-        return service.getContacts(page).map { it.toData() }
+        return service.getPictures(page).map { it.toData() }
     }
 
     override suspend fun observeNew(): Flow<List<PictureData>> {

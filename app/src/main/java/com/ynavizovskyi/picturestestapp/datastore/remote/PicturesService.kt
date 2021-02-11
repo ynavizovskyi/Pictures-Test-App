@@ -7,6 +7,6 @@ import retrofit2.http.Query
 interface PicturesService {
 
     @GET("list/")
-    suspend fun getContacts(@Query("page") page: Int, @Query("limit") limit: Int = 10): List<Picture>
+    suspend fun getPictures(@Query("page") page: Int, @Query("limit") limit: Int = 20): List<Picture>
 
 }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
+import com.ynavizovskyi.picturestestapp.presetntation.loadImage
 import kotlinx.android.synthetic.main.listitem_picture.view.*
 
 class PicturesAdapter(
@@ -41,6 +42,7 @@ class PicturesAdapter(
         fun bind(item: Picture) {
             itemView.idTextView.text = item.id.toString()
             itemView.authorTextView.text = item.author
+            itemView.pictureImageView.loadImage(item.url)
             itemView.setOnClickListener { itemClickListener.invoke(item) }
 
         }
