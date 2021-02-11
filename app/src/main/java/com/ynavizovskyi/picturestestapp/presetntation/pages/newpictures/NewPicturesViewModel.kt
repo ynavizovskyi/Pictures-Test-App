@@ -17,9 +17,9 @@ class NewPicturesViewModel @Inject constructor(
     markPictureAsSeenUseCase: MarkPictureAsSeenUseCase
 ) : BasePicturesViewModel(observeUseCase, loadPageUseCase, markPictureAsSeenUseCase) {
 
-//    init {
-//        loadPage(1)
-//    }
+    init {
+        loadPage(1)
+    }
 
     val newPicturesLiveData: MutableLiveData<List<ListItem>> = MutableLiveData()
 

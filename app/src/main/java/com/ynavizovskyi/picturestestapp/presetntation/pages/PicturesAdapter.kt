@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
+import com.ynavizovskyi.picturestestapp.domain.entity.aspectRatio
 import com.ynavizovskyi.picturestestapp.presetntation.ListItem
 import com.ynavizovskyi.picturestestapp.presetntation.VIEW_TYPE_LOADING
 import com.ynavizovskyi.picturestestapp.presetntation.VIEW_TYPE_PICTURE
@@ -64,7 +65,10 @@ class PictureItemViewHolder(
     fun bind(item: ListItem.PictureItem) {
             itemView.idTextView.text = item.picture.id.toString()
             itemView.authorTextView.text = item.picture.author
-            itemView.pictureImageView.loadImage(item.picture.url)
+
+            itemView.pictureImageView.layoutParams.height = (itemView.pictureImageView.width.toFloat() / item.picture.aspectRatio()).toInt()
+            itemView.pictureImageView.loadImage(item.picture.url, itemView.pictureImageView.width)
+
             itemView.setOnClickListener { itemClickListener.invoke(item.picture) }
             itemView.countDownTextView.text = item.countDownValue?.toString() ?: ""
     }
@@ -78,7 +82,7 @@ class LoadingViewHolder(
     RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: ListItem.Loading) {
-        loadMoreListener.invoke(item.nextPage)
+//        loadMoreListener.invoke(item.nextPage)
     }
 
 }
