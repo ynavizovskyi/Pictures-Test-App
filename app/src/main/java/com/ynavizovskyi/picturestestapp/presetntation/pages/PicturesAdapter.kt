@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
+import com.ynavizovskyi.picturestestapp.presetntation.ListItem
 import com.ynavizovskyi.picturestestapp.presetntation.loadImage
 import kotlinx.android.synthetic.main.listitem_picture.view.*
 
@@ -14,9 +15,9 @@ class PicturesAdapter(
 ) :
     RecyclerView.Adapter<PicturesAdapter.ViewHolder>() {
 
-    private var data: List<Picture> = emptyList()
+    private var data: List<ListItem> = emptyList()
 
-    fun setData(contacts: List<Picture>) {
+    fun setData(contacts: List<ListItem>) {
         data = contacts
         notifyDataSetChanged()
     }
@@ -39,11 +40,15 @@ class PicturesAdapter(
     ) :
         RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Picture) {
-            itemView.idTextView.text = item.id.toString()
-            itemView.authorTextView.text = item.author
-            itemView.pictureImageView.loadImage(item.url)
-            itemView.setOnClickListener { itemClickListener.invoke(item) }
+        fun bind(item: ListItem) {
+            (item as ListItem.PictureItem).let{
+                itemView.idTextView.text = item.picture.id.toString()
+                itemView.authorTextView.text = item.picture.author
+                itemView.pictureImageView.loadImage(item.picture.url)
+                itemView.setOnClickListener { itemClickListener.invoke(item.picture) }
+                itemView.countDownTextView.text = item.countDownValue?.value?.toString() ?: ""
+            }
+
 
         }
 

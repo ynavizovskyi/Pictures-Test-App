@@ -34,7 +34,7 @@ class SeenPicturesPageFragment : BaseFragment(R.layout.fragment_seen_pictures) {
 
     private fun observerData(){
         viewModel.seenPicturesLiveData.observe(viewLifecycleOwner){ contacts ->
-            contactsAdapter.setData(contacts)
+//            contactsAdapter.setData(contacts)
         }
     }
 }

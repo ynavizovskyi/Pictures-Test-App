@@ -17,7 +17,8 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
     lateinit var viewModel: PicturesViewModel
 
     private val pictureItemClickListener: (Picture) -> Unit = { picture ->
-        viewModel.markPictureAsSeen(picture, true)
+//        viewModel.markPictureAsSeen(picture, true)
+        viewModel.startOrRestartDeleteCountDown(picture)
     }
 
     private val contactsAdapter = PicturesAdapter(pictureItemClickListener)
