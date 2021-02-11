@@ -11,6 +11,10 @@ class RemotePictureDataStore @Inject constructor(private val service: PicturesSe
         TODO("Not yet implemented")
     }
 
+    override suspend fun markAsSeen(pictureId: Long, isSeen: Boolean) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun loadPage(page: Int): List<PictureData> {
         return service.getContacts(page).map { it.toData() }
     }

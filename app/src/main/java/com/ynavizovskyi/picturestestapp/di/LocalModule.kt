@@ -4,6 +4,7 @@ import android.content.Context
 import com.ynavizovskyi.picturestestapp.datastore.local.DatabaseManager
 import com.ynavizovskyi.picturestestapp.datastore.local.RoomDatabaseManager
 import com.ynavizovskyi.picturestestapp.datastore.local.dao.PictureDao
+import com.ynavizovskyi.picturestestapp.datastore.local.dao.PictureSeenDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -21,8 +22,14 @@ class LocalModule {
 
     @Provides
     @Singleton
-    fun providesContactDao(databaseManager: DatabaseManager): PictureDao {
+    fun providesPictureDao(databaseManager: DatabaseManager): PictureDao {
         return databaseManager.pictureDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesPictureSeenDao(databaseManager: DatabaseManager): PictureSeenDao {
+        return databaseManager.pictureSeenDao()
     }
 
 }

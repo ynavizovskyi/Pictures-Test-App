@@ -11,5 +11,10 @@ abstract class PictureDao : BaseRoomDao<PictureEntity>() {
     @Query(" SELECT * FROM PictureEntity")
     abstract fun observerAll(): Flow<List<PictureEntity>>
 
+    @Query(
+        """ SELECT * FROM PictureEntity JOIN PictureSeenEntity ON
+            PictureEntity.id = PictureSeenEntity.pictureId WHERE PictureSeenEntity.isSeen = :isSeen"""
+    )
+    abstract fun observerSeen(isSeen: Boolean): Flow<List<PictureEntity>>
 
 }

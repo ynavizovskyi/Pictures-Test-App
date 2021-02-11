@@ -6,6 +6,8 @@ interface PictureDataStore {
 
     suspend fun save(pictures: List<PictureData>)
 
+    suspend fun markAsSeen(pictureId: Long, isSeen: Boolean)
+
     suspend fun loadPage(page: Int): List<PictureData>
 
     suspend fun observeNew(): Flow<List<PictureData>>

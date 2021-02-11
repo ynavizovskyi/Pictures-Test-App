@@ -11,4 +11,6 @@ interface PictureRepository {
 
     suspend fun observeSeenPictures(): Flow<List<Picture>>
 
+    suspend fun markAsSeen(picture: Picture, isSeen: Boolean)
+
 }

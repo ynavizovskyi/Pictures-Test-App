@@ -26,6 +26,12 @@ class PictureRepositoryImpl @Inject constructor(
     }
 
     override suspend fun observeSeenPictures(): Flow<List<Picture>> {
-        TODO("Not yet implemented")
+        return localStore.observeSeen().map { list ->
+            list.map { it.toDomain() }
+        }
+    }
+
+    override suspend fun markAsSeen(picture: Picture, isSeen: Boolean) {
+        localStore.markAsSeen(picture.id, isSeen)
     }
 }
