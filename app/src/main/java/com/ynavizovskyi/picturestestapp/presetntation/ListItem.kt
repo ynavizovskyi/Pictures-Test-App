@@ -2,11 +2,11 @@ package com.ynavizovskyi.picturestestapp.presetntation
 
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
 
-sealed class ListItem {
+sealed class ListItem(val id: Long) {
 
-    data class PictureItem(val picture: Picture, val countDownValue: CountDownValue?) : ListItem()
+    data class PictureItem(val picture: Picture, val countDownValue: CountDownValue?) : ListItem(picture.id)
 
-    data class Loading(val page: Int) : ListItem()
+    data class Loading(val page: Int) : ListItem(-1)
 
 }
 
