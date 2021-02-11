@@ -25,10 +25,12 @@ class PicturesViewModel @Inject constructor(
         observePictures()
     }
 
+    val undoDeleteLiveData: MutableLiveData<UndoDelete> = MutableLiveData()
+
     val newPicturesLiveData: MutableLiveData<List<ListItem>> = MutableLiveData()
     val seenPicturesLiveData: MutableLiveData<List<Picture>> = MutableLiveData()
 
-    private val itemCountDownMap = mutableMapOf<Picture, CountDown>()
+    private val itemCountDownMap = mutableMapOf<Picture, CountDownWrapper>()
 
     private var pictures = emptyList<Picture>()
 
@@ -46,7 +48,6 @@ class PicturesViewModel @Inject constructor(
         }
     }
 
-
     private fun loadPage(page: Int){
         viewModelScope.launch {
             loadPageUseCase(page)
@@ -60,14 +61,22 @@ class PicturesViewModel @Inject constructor(
     }
 
     fun startOrRestartDeleteCountDown(picture: Picture){
-        itemCountDownMap[picture]?.cancel()
+        val ongoingCountDown = itemCountDownMap[picture]
+        ongoingCountDown?.countDown?.cancel()
 
-        val countDown = CountDown(viewModelScope, 10){
-            Log.v("dddd", it.toString())
-            newPicturesLiveData.value = createViewState(pictures)
+        val countDown = CountDown(viewModelScope, 5){
+            Log.v("dddd", itemCountDownMap[picture]?.clickNumber.toString())
+            if(it == 0){
+                markPictureAsSeen(picture, true)
+                undoDeleteLiveData.value = UndoDelete(picture, itemCountDownMap[picture]?.clickNumber ?: 1){
+                    markPictureAsSeen(picture, false)
+                }
+            } else {
+                newPicturesLiveData.value = createViewState(pictures)
+            }
         }
 
-        itemCountDownMap.put(picture, countDown)
+        itemCountDownMap.put(picture, CountDownWrapper(countDown, ongoingCountDown?.clickNumber?.inc() ?: 1))
         countDown.start()
 
     }
@@ -75,7 +84,7 @@ class PicturesViewModel @Inject constructor(
     private fun createViewState(pictures: List<Picture>): List<ListItem>{
         val result = pictures.map { picture ->
             val countDownValue = itemCountDownMap[picture]?.let {
-                CountDownValue(it.count)
+                CountDownValue(it.countDown.count)
             }
             ListItem.PictureItem(picture, countDownValue)
         }
@@ -94,8 +103,8 @@ class CountDown(private val scope: CoroutineScope, private var seconds: Int, pri
     fun start(){
         scope.launch {
             for (event in tickerChannel) {
-                tick.invoke(seconds)
                 count = seconds
+                tick.invoke(seconds)
                 seconds--
                 if(seconds < 0){
                     tickerChannel.cancel()
@@ -109,3 +118,8 @@ class CountDown(private val scope: CoroutineScope, private var seconds: Int, pri
     }
 
 }
+
+data class CountDownWrapper(val countDown: CountDown, val clickNumber: Int)
+
+data class UndoDelete(val picture: Picture, val itemClickCount: Int, val undoAction: () -> Unit)
+

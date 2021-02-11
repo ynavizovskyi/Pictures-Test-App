@@ -12,4 +12,6 @@
 
     <string name="page_title_new">New Pictures</string>
     <string name="page_title_seen">Seen Pictures</string>
+
+    <string name="undo">Undo</string>
 </resources>

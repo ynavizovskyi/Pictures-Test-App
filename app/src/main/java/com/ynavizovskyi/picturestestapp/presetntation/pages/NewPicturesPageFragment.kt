@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.snackbar.Snackbar
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
 import com.ynavizovskyi.picturestestapp.presetntation.PicturesViewModel
@@ -41,6 +42,14 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
     private fun observerData(){
         viewModel.newPicturesLiveData.observe(viewLifecycleOwner){ contacts ->
             contactsAdapter.data = contacts
+        }
+
+        viewModel.undoDeleteLiveData.observe(viewLifecycleOwner){ undo ->
+            val mySnackbar = Snackbar.make(root, "DELETED", Snackbar.LENGTH_LONG)
+            mySnackbar.setAction(R.string.undo){
+                undo.undoAction.invoke()
+            }
+            mySnackbar.show()
         }
     }
 }
