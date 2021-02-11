@@ -5,10 +5,20 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
-
         <item name="cardBackgroundColor">@android:color/white</item>
         <item name="cardElevation">3dp</item>
         <item name="cardCornerRadius">3dp</item>
+    </style>
+
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabMode">scrollable</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:background">@color/purple_500</item>
+        <item name="tabTextColor">@color/white_50</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/white</item>
     </style>
 
 </resources>
