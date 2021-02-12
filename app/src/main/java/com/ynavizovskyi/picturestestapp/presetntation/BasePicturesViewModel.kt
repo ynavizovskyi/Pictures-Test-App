@@ -9,29 +9,21 @@ import com.ynavizovskyi.picturestestapp.domain.usecase.MarkPictureAsSeenUseCase
 import com.ynavizovskyi.picturestestapp.domain.usecase.ObservePicturesUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.ticker
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 abstract class BasePicturesViewModel(
-    protected val observeUseCase: ObservePicturesUseCase,
-    protected val loadPageUseCase: LoadPicturesPageUseCase,
-    protected val markPictureAsSeenUseCase: MarkPictureAsSeenUseCase
+    private val observeUseCase: ObservePicturesUseCase,
+    private val markPictureAsSeenUseCase: MarkPictureAsSeenUseCase
 ) : ViewModel() {
 
-    init {
-        observePictures()
-    }
 
-    val undoMarkAsSeenLiveData: MutableLiveData<UndoDelete> = MutableLiveData()
+    val picturesLiveData: MutableLiveData<List<ListItem>> = MutableLiveData()
+    val undoMarkPictureLiveData: MutableLiveData<UndoDelete> = MutableLiveData()
 
-    protected val itemCountDownMap = mutableMapOf<Picture, CountDownWrapper>()
+    private var pictures = emptyList<Picture>()
+    private val itemCountDownMap = mutableMapOf<Picture, CountDownWrapper>()
 
-    abstract protected fun observePictures()
-
-    protected fun markPictureAsSeen(picture: Picture, isSeen: Boolean){
-        viewModelScope.launch {
-            markPictureAsSeenUseCase.invoke(picture, isSeen)
-        }
-    }
 
     protected open fun createViewState(pictures: List<Picture>): List<ListItem>{
         val result = pictures.map { picture ->
@@ -41,7 +33,64 @@ abstract class BasePicturesViewModel(
         return result
     }
 
+    fun observePictures(observeSeen: Boolean) {
+        viewModelScope.launch {
+            observeUseCase.observe(observeSeen).collect {
+                pictures = it
+                picturesLiveData.value = createViewState(it)
+            }
+        }
+    }
+
+
+    fun startOrRestartMarkAsSeenCountDown(picture: Picture, markAsSeen: Boolean){
+        val ongoingCountDown = itemCountDownMap[picture]
+        ongoingCountDown?.countDown?.cancel()
+
+        val countDown = createCountDown(picture, markAsSeen)
+        val countDownWrapper = CountDownWrapper(countDown, ongoingCountDown?.clickNumber?.inc() ?: 1)
+
+        itemCountDownMap[picture] = countDownWrapper
+        countDown.start()
+    }
+
+    private fun markPictureAsSeen(picture: Picture, isSeen: Boolean){
+        viewModelScope.launch {
+            markPictureAsSeenUseCase.invoke(picture, isSeen)
+        }
+    }
+
+    private fun createCountDown(picture: Picture, markAsSeen: Boolean): CountDown{
+        return CountDown(viewModelScope, 3) {
+            if (it == 0) {
+                markPictureAsSeen(picture, markAsSeen)
+                undoMarkPictureLiveData.value =
+                    UndoDelete(picture, itemCountDownMap[picture]?.clickNumber ?: 1) {
+                        markPictureAsSeen(picture, !markAsSeen)
+                    }
+            } else {
+                picturesLiveData.value = createViewState(pictures)
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class CountDown(private val scope: CoroutineScope, private var seconds: Int, private val tick: (seconds: Int) -> Unit){
 

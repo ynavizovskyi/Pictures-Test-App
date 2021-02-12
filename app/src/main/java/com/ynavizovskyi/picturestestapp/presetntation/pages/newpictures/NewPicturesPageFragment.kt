@@ -20,8 +20,7 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
     lateinit var viewModel: NewPicturesViewModel
 
     private val pictureItemClickListener: (Picture) -> Unit = { picture ->
-//        viewModel.markPictureAsSeen(picture, true)
-        viewModel.startOrRestartMarkAsSeenCountDown(picture)
+        viewModel.startOrRestartMarkAsSeenCountDown(picture, true)
     }
 
     private val loadMoreListener: (Int) -> Unit = { nextPage ->
@@ -43,11 +42,11 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
     }
 
     private fun observerData(){
-        viewModel.newPicturesLiveData.observe(viewLifecycleOwner){ contacts ->
+        viewModel.picturesLiveData.observe(viewLifecycleOwner){ contacts ->
             contactsAdapter.data = contacts
         }
 
-        viewModel.undoMarkAsSeenLiveData.observe(viewLifecycleOwner){ undo ->
+        viewModel.undoMarkPictureLiveData.observe(viewLifecycleOwner){ undo ->
             val mySnackbar = Snackbar.make(root, "DELETED", Snackbar.LENGTH_LONG)
             mySnackbar.setAction(R.string.undo){
                 undo.undoAction.invoke()

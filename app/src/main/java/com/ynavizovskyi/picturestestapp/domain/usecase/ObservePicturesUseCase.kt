@@ -12,11 +12,20 @@ class ObservePicturesUseCase @Inject constructor(
     private val dispatcherManager: DispatcherManager
 ) {
 
-    suspend fun observeNew(): Flow<List<Picture>> {
+    suspend fun observe(observeSeen: Boolean): Flow<List<Picture>> {
         return withContext(dispatcherManager.io){
-            repository.observeNewPictures()
+            if(observeSeen){
+                repository.observeSeenPictures()
+            } else {
+                repository.observeNewPictures()
+            }
         }
     }
+//    suspend fun observeNew(): Flow<List<Picture>> {
+//        return withContext(dispatcherManager.io){
+//            repository.observeNewPictures()
+//        }
+//    }
 
     suspend fun observeSeen(): Flow<List<Picture>> {
         return withContext(dispatcherManager.io){
