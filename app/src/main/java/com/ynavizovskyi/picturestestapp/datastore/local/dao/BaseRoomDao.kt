@@ -13,6 +13,9 @@ abstract class BaseRoomDao<E> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insert(entities: List<E>): List<Long>
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertIgnoreConflicts(entities: List<E>): List<Long>
+
     @Update
     abstract suspend fun update(entity: E)
 

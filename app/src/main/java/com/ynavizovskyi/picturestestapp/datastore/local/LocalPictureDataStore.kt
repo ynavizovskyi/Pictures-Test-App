@@ -18,7 +18,7 @@ class LocalPictureDataStore @Inject constructor(
 ) : PictureDataStore {
 
     override suspend fun save(pictures: List<PictureData>) {
-        pictureSeenDao.insert(pictures.map { PictureSeenEntity(it.id, false) })
+        pictureSeenDao.insertIgnoreConflicts(pictures.map { PictureSeenEntity(it.id, false) })
         pictureDao.insert(pictures.map { it.toEntity() })
     }
 
