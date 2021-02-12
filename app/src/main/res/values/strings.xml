@@ -14,4 +14,7 @@
     <string name="page_title_seen">Seen Pictures</string>
 
     <string name="undo">Undo</string>
+
+    <string name="marker_seen">Seen</string>
+    <string name="marker_new">New</string>
 </resources>

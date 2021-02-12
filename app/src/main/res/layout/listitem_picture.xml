@@ -36,6 +36,15 @@
                 app:layout_constraintTop_toBottomOf="@id/idTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/seenMarkerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/item_text_margin"
+                android:layout_marginLeft="@dimen/item_text_margin"
+                app:layout_constraintLeft_toRightOf="@id/pictureImageView"
+                app:layout_constraintTop_toBottomOf="@id/authorTextView" />
+
+        <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/countDownTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

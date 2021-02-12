@@ -2,6 +2,9 @@ package com.ynavizovskyi.picturestestapp.datastore.local
 
 import com.ynavizovskyi.picturestestapp.data.PictureData
 import com.ynavizovskyi.picturestestapp.data.PictureDataStore
+import com.ynavizovskyi.picturestestapp.data.decorator.PictureDataDecorator
+import com.ynavizovskyi.picturestestapp.data.decorator.SeenData
+import com.ynavizovskyi.picturestestapp.data.decorator.SeenDataDecorator
 import com.ynavizovskyi.picturestestapp.datastore.local.dao.PictureDao
 import com.ynavizovskyi.picturestestapp.datastore.local.dao.PictureSeenDao
 import com.ynavizovskyi.picturestestapp.datastore.local.entity.PictureSeenEntity
@@ -35,7 +38,9 @@ class LocalPictureDataStore @Inject constructor(
 
     override suspend fun observeSeen(): Flow<List<PictureData>> {
         return pictureDao.observerSeen(true).map { list ->
-            list.map { it.toData() }
+            list.map {
+                PictureDataDecorator(it.toData(), SeenDataDecorator(true))
+            }
         }
     }
 }

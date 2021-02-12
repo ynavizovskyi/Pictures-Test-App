@@ -3,6 +3,7 @@ package com.ynavizovskyi.picturestestapp.presetntation.pages
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ynavizovskyi.picturestestapp.R
@@ -30,7 +31,7 @@ class PicturesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return when(viewType){
+        return when (viewType) {
             VIEW_TYPE_PICTURE -> {
                 val view = layoutInflater.inflate(R.layout.listitem_picture, parent, false)
                 return PictureItemViewHolder(view, itemClickListener)
@@ -47,7 +48,7 @@ class PicturesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = data[position]
-        when(item){
+        when (item) {
             is ListItem.PictureItem -> (holder as? PictureItemViewHolder)?.bind(item)
             is ListItem.Loading -> (holder as? LoadingViewHolder)?.bind(item)
         }
@@ -63,14 +64,23 @@ class PictureItemViewHolder(
     RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: ListItem.PictureItem) {
-            itemView.idTextView.text = item.picture.id.toString()
-            itemView.authorTextView.text = item.picture.author
+        val picture = item.picture
 
-            itemView.pictureImageView.layoutParams.height = (itemView.pictureImageView.width.toFloat() / item.picture.aspectRatio()).toInt()
-            itemView.pictureImageView.loadImage(item.picture.url, itemView.pictureImageView.width)
+        itemView.idTextView.text = picture.id.toString()
+        itemView.authorTextView.text = picture.author
 
-            itemView.setOnClickListener { itemClickListener.invoke(item.picture) }
-            itemView.countDownTextView.text = item.countDownValue?.toString() ?: ""
+        itemView.pictureImageView.layoutParams.height =
+            (itemView.pictureImageView.width.toFloat() / picture.aspectRatio()).toInt()
+        itemView.pictureImageView.loadImage(picture.url, itemView.pictureImageView.width)
+
+        itemView.setOnClickListener { itemClickListener.invoke(picture) }
+        itemView.countDownTextView.text = item.countDownValue?.toString()
+        itemView.countDownTextView.isVisible = item.countDownValue != null
+
+        val markerTextColorRes = if(picture.isSeen) R.color.green else R.color.red
+        val markerTextRes = if(picture.isSeen) R.string.marker_seen else R.string.marker_new
+        itemView.seenMarkerTextView.setTextColor(itemView.context.resources.getColor(markerTextColorRes))
+        itemView.seenMarkerTextView.setText(markerTextRes)
     }
 
 }
