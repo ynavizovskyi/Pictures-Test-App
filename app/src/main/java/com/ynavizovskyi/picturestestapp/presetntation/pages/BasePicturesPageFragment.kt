@@ -10,7 +10,7 @@ import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
 import com.ynavizovskyi.picturestestapp.presetntation.BasePicturesViewModel
 import com.ynavizovskyi.picturestestapp.presetntation.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_new_pictures.*
+import kotlinx.android.synthetic.main.fragment_pictures.*
 
 abstract class BasePicturesPageFragment  : BaseFragment(R.layout.fragment_pictures) {
 
