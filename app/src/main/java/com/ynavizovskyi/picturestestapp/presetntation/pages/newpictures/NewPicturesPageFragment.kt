@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
 
-
     @Inject
     lateinit var viewModel: NewPicturesViewModel
 
@@ -37,7 +36,6 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
         picturesRecyclerView.adapter = contactsAdapter
         (picturesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
-
         observerData()
     }
 
@@ -54,4 +52,6 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
             mySnackbar.show()
         }
     }
+
+
 }

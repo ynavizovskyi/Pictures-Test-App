@@ -82,7 +82,7 @@ class LoadingViewHolder(
     RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: ListItem.Loading) {
-//        loadMoreListener.invoke(item.nextPage)
+        loadMoreListener.invoke(item.nextPage)
     }
 
 }

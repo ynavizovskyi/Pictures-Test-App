@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="40dp"
-        android:background="@color/black">
+        android:layout_width="match_parent" android:layout_height="64dp"
+        android:background="@android:color/transparent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+            android:layout_width="@dimen/list_progress_bar_size"
+            android:layout_height="@dimen/list_progress_bar_size"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/purple_500" />
+
+</FrameLayout>

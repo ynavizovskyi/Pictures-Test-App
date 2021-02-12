@@ -9,7 +9,6 @@ import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
 import com.ynavizovskyi.picturestestapp.presetntation.base.BaseFragment
 import com.ynavizovskyi.picturestestapp.presetntation.pages.PicturesAdapter
-import kotlinx.android.synthetic.main.fragment_new_pictures.*
 import kotlinx.android.synthetic.main.fragment_seen_pictures.*
 import javax.inject.Inject
 
