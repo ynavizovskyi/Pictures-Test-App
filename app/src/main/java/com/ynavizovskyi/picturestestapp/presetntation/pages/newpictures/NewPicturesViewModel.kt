@@ -20,7 +20,7 @@ class NewPicturesViewModel @Inject constructor(
 
     init {
         observePictures(false)
-//        loadPage(1)
+        loadPage(1)
     }
 
     private var loadPageJob: Job? = null
@@ -35,7 +35,9 @@ class NewPicturesViewModel @Inject constructor(
     override fun createViewState(pictures: List<Picture>): List<ListItem> {
         val pictures =  super.createViewState(pictures)
         val nextPage = (pictures.size / PAGE_SIZE) + 1
-        return pictures + ListItem.Loading(nextPage)
+
+        //first page is loaded automatically
+        return if(nextPage > 1)pictures + ListItem.Loading(nextPage) else pictures
     }
 
 

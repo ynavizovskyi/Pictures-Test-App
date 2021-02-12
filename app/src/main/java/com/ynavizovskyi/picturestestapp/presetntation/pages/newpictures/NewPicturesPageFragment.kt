@@ -45,7 +45,8 @@ class NewPicturesPageFragment : BaseFragment(R.layout.fragment_new_pictures) {
         }
 
         viewModel.undoMarkPictureLiveData.observe(viewLifecycleOwner){ undo ->
-            val mySnackbar = Snackbar.make(root, "DELETED", Snackbar.LENGTH_LONG)
+            val message = String.format(getString(R.string.undo_message), undo.picture.id, undo.itemClickCount)
+            val mySnackbar = Snackbar.make(root, message, Snackbar.LENGTH_LONG)
             mySnackbar.setAction(R.string.undo){
                 undo.undoAction.invoke()
             }

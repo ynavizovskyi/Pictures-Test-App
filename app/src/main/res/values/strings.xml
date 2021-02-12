@@ -13,6 +13,7 @@
     <string name="page_title_new">New Pictures</string>
     <string name="page_title_seen">Seen Pictures</string>
 
+    <string name="undo_message">Item %s clicked %s times</string>
     <string name="undo">Undo</string>
 
     <string name="marker_seen">Seen</string>
