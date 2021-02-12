@@ -64,6 +64,7 @@ abstract class BasePicturesViewModel(
                     UndoDeleteEvent(picture, itemCountDownMap[picture]?.clickNumber ?: 1) {
                         markPictureAsSeen(picture, !markAsSeen)
                     }
+                itemCountDownMap.remove(picture)
             } else {
                 picturesLiveData.value = createViewState(pictures)
             }

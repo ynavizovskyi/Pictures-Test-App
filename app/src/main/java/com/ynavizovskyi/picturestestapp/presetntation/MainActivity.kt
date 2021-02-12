@@ -1,11 +1,6 @@
 package com.ynavizovskyi.picturestestapp.presetntation
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.presetntation.base.BaseActivity
 import com.ynavizovskyi.picturestestapp.presetntation.pages.PicturesPagerAdapter
