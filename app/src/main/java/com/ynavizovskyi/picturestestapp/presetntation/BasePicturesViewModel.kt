@@ -27,7 +27,9 @@ abstract class BasePicturesViewModel(
 
     protected open fun createViewState(pictures: List<Picture>): List<ListItem>{
         val result = pictures.map { picture ->
-            val countDownValue = itemCountDownMap[picture]?.countDown?.count
+            val countDownValue = itemCountDownMap[picture]?.countDown?.count?.let {
+                if(it > 0) it else null
+            }
             ListItem.PictureItem(picture, countDownValue)
         }
         return result
