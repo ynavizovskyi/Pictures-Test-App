@@ -69,9 +69,12 @@ class PictureItemViewHolder(
         itemView.idTextView.text = picture.id.toString()
         itemView.authorTextView.text = picture.author
 
-        itemView.pictureImageView.layoutParams.height =
-            (itemView.pictureImageView.width.toFloat() / picture.aspectRatio()).toInt()
-        itemView.pictureImageView.loadImage(picture.url, itemView.pictureImageView.width)
+        itemView.pictureImageView.post {
+            itemView.pictureImageView.layoutParams.height =
+                (itemView.pictureImageView.width.toFloat() / picture.aspectRatio()).toInt()
+            itemView.pictureImageView.loadImage(picture.url, itemView.pictureImageView.width)
+        }
+
 
         itemView.setOnClickListener { itemClickListener.invoke(picture) }
         itemView.countDownTextView.text = item.countDownValue?.toString()
