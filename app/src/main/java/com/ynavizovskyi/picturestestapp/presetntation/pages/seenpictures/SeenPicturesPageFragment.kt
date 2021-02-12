@@ -1,49 +1,23 @@
 package com.ynavizovskyi.picturestestapp.presetntation.pages.seenpictures
 
-import android.os.Bundle
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import com.ynavizovskyi.picturestestapp.R
 import com.ynavizovskyi.picturestestapp.domain.entity.Picture
-import com.ynavizovskyi.picturestestapp.presetntation.base.BaseFragment
-import com.ynavizovskyi.picturestestapp.presetntation.pages.PicturesAdapter
-import kotlinx.android.synthetic.main.fragment_seen_pictures.*
+import com.ynavizovskyi.picturestestapp.presetntation.BasePicturesViewModel
+import com.ynavizovskyi.picturestestapp.presetntation.pages.BasePicturesPageFragment
 import javax.inject.Inject
 
-class SeenPicturesPageFragment : BaseFragment(R.layout.fragment_seen_pictures) {
+class SeenPicturesPageFragment : BasePicturesPageFragment() {
 
     @Inject
-    lateinit var viewModel: SeenPicturesViewModel
+    lateinit var seenViewModel: SeenPicturesViewModel
 
-    private val pictureItemClickListener: (Picture) -> Unit = { picture ->
-        viewModel.startOrRestartMarkAsSeenCountDown(picture, false)
-    }
+    override val viewModel: BasePicturesViewModel
+        get() = seenViewModel
 
-    private val contactsAdapter = PicturesAdapter(pictureItemClickListener, {})
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        seenPicturesRecyclerView.layoutManager = layoutManager
-        seenPicturesRecyclerView.adapter = contactsAdapter
-
-        observerData()
-    }
-
-    private fun observerData(){
-        viewModel.picturesLiveData.observe(viewLifecycleOwner){ contacts ->
-            contactsAdapter.data = contacts
+    override val pictureItemClickListener: (Picture) -> Unit
+        get() = { picture ->
+            viewModel.startOrRestartMarkAsSeenCountDown(picture, false)
         }
 
-        viewModel.undoMarkPictureLiveData.observe(viewLifecycleOwner){ undo ->
-            val mySnackbar = Snackbar.make(root, "RETURNED", Snackbar.LENGTH_LONG)
-            mySnackbar.setAction(R.string.undo){
-                undo.undoAction.invoke()
-            }
-            mySnackbar.show()
-        }
-    }
+    override val loadMoreListener: (Int) -> Unit
+        get() = {}
 }
